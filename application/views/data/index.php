@@ -33,8 +33,11 @@
             <div class="tab-content">
                 <!-- Page Heading -->
                 <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
+               <!--  Nzr -->
+                 <form id="get_kondisi" action="" method="post">
+                    <!--  -->
                 <a href="<?php $_SERVER['PHP_SELF']; ?>" class="btn btn-danger mb-3"><i class="fas fa-redo-alt"></i> Refresh</a>
-                <a href="<?php $_SERVER['PHP_SELF']; ?>" class="btn btn-warning mb-3"><i class="fas fa-redo-alt"></i> Update Data</a>
+                <a type="submit" class="btn btn-warning mb-3"><i class="fas fa-redo-alt"></i> Update Data</a>
                 <table class="table table-hover display table-responsive" id="example2">
                     <thead>
                         <tr>
@@ -58,8 +61,69 @@
                                 <td><?php echo $d['opd'] ?></td>
                                 <td><?php echo $d['alamat'] ?></td>
                                 <td><?php echo $d['cluster'] ?></td>
-                                <td><?php echo $d['kondisi'] ?></td>
-                                <td><?php echo $d['time'] ?></td>
+
+                                <input type="hidden" name="id[]" value="<?php echo $d['id'] ?>">
+                                <input type="hidden" name="opd[]" value="<?php echo $d['opd'] ?>">
+                                <input type="hidden" name="alamat[]" value="<?php echo $d['alamat'] ?>">
+                                <input type="hidden" name="cluster[]" value="<?php echo $d['cluster'] ?>">
+
+                                <td class="text-center tdcls">
+                        <?php
+                        // $url = $d['ip'];
+
+                        // echo $url;
+                      //   $ch = curl_init($url);
+                      //   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                      //   $data = curl_exec($ch);
+                      //   $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                      //   $httptime = curl_getinfo($ch, CURLINFO_TOTAL_TIME);
+                      //   curl_close($ch);
+                      //   if($httpcode>=200 && $httpcode<300){
+                      //       echo '<span class="badge badge-success">Up</span>';
+                      //   } else {
+                      //     echo '<span class="badge badge-danger">Down</span>';
+                      // }
+
+                        $url =  $d['ip'];;
+                        $ch = curl_init($url);
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        $data = curl_exec($ch);
+                        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                        curl_close($ch);
+                        if($httpcode>=200 && $httpcode<300){
+                          echo '<input type="hidden" name="kondisi[]" value="Up">'; 
+                          echo '<span class="badge badge-success">Up</span>';
+                        } else {
+                          echo '<input type="hidden" name="kondisi[]" value="Down">'; 
+                          echo '<span class="badge badge-danger">Down</span>';
+                        }
+
+                      ?>
+                  </td>
+                  <td>
+                    <?php
+                    // $url = $d['ip'];
+                    // $ch = curl_init($url);
+                    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    // $data = curl_exec($ch);
+                    // $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    // $httptime = curl_getinfo($ch, CURLINFO_TOTAL_TIME);
+                    // curl_close($ch);
+
+                    $url =  $d['ip'];;
+                    $ch = curl_init($url);
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    $data = curl_exec($ch);
+                    $httptime = curl_getinfo($ch, CURLINFO_TOTAL_TIME);
+                    curl_close($ch);
+                    echo $httptime;
+                    ?>
+                </td>
+                        
                                 <td><?php echo $d['ip'] ?></td>
                                 <td><?php echo $d['jenis_konverter'] ?></td>
                                 <td class="text-center"><small><a href="" data-toggle="modal" data-target="#modal_edit<?php echo $d['id'];?>"> Show Details</a></small></td>
@@ -73,6 +137,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </form>
             </div>
         </div>
     </div>
@@ -303,3 +368,32 @@
         </div>
     <?php endforeach;?>
 
+
+<script type="text/javascript">
+    //Nzr
+     $("form#get_kondisi").click(function(event){
+     
+      event.preventDefault(); 
+      var formData = new FormData($(this)[0]);
+     
+      $.post({
+        url :"<?php echo base_url(); ?>Data/UpdateKondisi",
+        data: formData,
+        async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (success) {
+          if (success == -1) {
+            Gagal('Data Gagal Ditambahkan.');
+          }else if (success == 1) {
+            Sukses('Data berhasil diupdate.');
+            $("form#get_kondisi").trigger('reset');
+            $('#example2').DataTable().ajax.reload();
+          };
+        }
+      });
+     
+      return false;
+    });
+ </script>
