@@ -320,4 +320,25 @@ public function hapusopd($id)
     $this->session->set_flashdata('success', 'Data OPD Berhasil dihapus');
     redirect('data/opd'); //redirect
 }
+  
+ public function UpdateKondisi() {
+    
+    for ($i=0; $i <count($_POST['kondisi']) ; $i++) {       
+     $data = [
+            'waktu' => date('Y-m-d H:i:s'),
+            'kondisi' => $this->input->post('kondisi')[$i],
+        ];
+     
+        $this->db->where(array('id' => $this->input->post('id')[$i]));
+        $this->db->update('data', $data);
+
+    }
+
+    if ($_POST['kondisi'] != '') {
+            echo 1; 
+        } else {
+            echo -1; 
+        }
+
+    }
 }
