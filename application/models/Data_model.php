@@ -25,7 +25,7 @@ class Data_model extends CI_Model
 
 	public function data()
 	{
-		$this->db->select ( '*' ); 
+		$this->db->select ( 'data.id, data.opd, data.alamat, cluster.cluster,data.kondisi,data.ip,data.jenis_konverter' ); 
 		$this->db->from ( 'data' );
 		$this->db->join ( 'data2', 'data2.id = data.id' , 'left' );
 		$this->db->join ( 'cluster', 'cluster.id = data.cluster' , 'left' );
