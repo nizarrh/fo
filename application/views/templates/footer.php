@@ -262,6 +262,13 @@
       'autoWidth'   : true
     })
   })
+ 
+ function Sukses(txt) {
+        swal("BERHASIL!", txt, "success");
+    }
+function Gagal(txt) {
+      swal("GAGAL!", txt, "error");
+    }
 </script>
 
 
